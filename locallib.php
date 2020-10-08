@@ -26,30 +26,29 @@ require_once($CFG->dirroot . "/local/roftools/roflib.php");
 function get_id_courses_to_validate($approbateurid, $validated, $permcheck=false) {
     global $DB;
 
-    $avaliderId = $DB->get_field('custom_info_field', 'id', array('objectname' => 'course', 'shortname' => 'up1avalider'));
-    $datevalidId = $DB->get_field('custom_info_field', 'id', array('objectname' => 'course', 'shortname' => 'up1datevalid'));
-    $approbateurpropidId = $DB->get_field('custom_info_field', 'id',
-        array('objectname' => 'course', 'shortname' => 'up1approbateurpropid'));
+    $avaliderId = $DB->get_field('customfield_field', 'id', ['shortname' => 'up1avalider']);
+    $datevalidId = $DB->get_field('customfield_field', 'id', ['shortname' => 'up1datevalid']);
+    $approbateurpropidId = $DB->get_field('customfield_field', 'id', ['shortname' => 'up1approbateurpropid']);
 
     if ( ! ($avaliderId && $datevalidId && $approbateurpropidId) ) {
         throw new coding_exception('Erreur ! manque up1avalider ou up1datevalid ou up1approbateurid');
         // die ('Erreur ! manque up1avalider ou up1datevalid ou up1approbateurid');
         return;
     }
-    $sql = "SELECT DISTINCT cd1.objectid FROM {custom_info_data} cd1 "     //cd1 = avalider (bool)
-         . "JOIN {custom_info_data} cd2 ON (cd1.objectid=cd2.objectid) " ; //cd2 = datevalid
+    $sql = "SELECT DISTINCT cd1.instanceid FROM {customfield_data} cd1 "     //cd1 = avalider (bool)
+         . "JOIN {customfield_data} cd2 ON (cd1.instanceid=cd2.instanceid) " ; //cd2 = datevalid
     if ($approbateurid) {
-        $sql .= "JOIN {custom_info_data} cdq ON (cd1.objectid=cdq.objectid) " ; //cdq = approbateurpropid
+        $sql .= "JOIN {customfield_data} cdq ON (cd1.instanceid=cdq.instanceid) " ; //cdq = approbateurpropid
     }
-    $sql .= "WHERE cd1.fieldid=$avaliderId AND cd1.data=1 AND cd2.fieldid=$datevalidId ";
+    $sql .= "WHERE cd1.fieldid=$avaliderId AND cd1.value=1 AND cd2.fieldid=$datevalidId ";
     if ($approbateurid) {
-        $sql .= "AND cdq.fieldid=$approbateurpropidId AND cdq.data=$approbateurid " ;
+        $sql .= "AND cdq.fieldid=$approbateurpropidId AND cdq.value=$approbateurid " ;
     }
     if ($validated == 0) {
-        $sql .= " AND cd2.data = 0 ";
+        $sql .= " AND cd2.value = 0 ";
     }
     if ($validated == 1) {
-        $sql .= " AND cd2.data > 0 ";
+        $sql .= " AND cd2.value > 0 ";
     }
     $tabIdCourse = $DB->get_fieldset_sql($sql);
     $tabchecked = array();
@@ -366,8 +365,10 @@ function validate_course($crsid) {
         throw new coding_exception('Erreur ! manque up1datevalid ou up1approbateureffid pour le cours ' . $crsid);
         return false;
     }
-    $DB->update_record('custom_info_data', array('id' => $iddate, 'data' => time()));
-    $DB->update_record('custom_info_data', array('id' => $idwho, 'data' => $USER->id));
+    
+    up1_meta_set_data($crsid, 'up1datevalid', time());
+    up1_meta_set_data($crsid, 'up1approbateureffid', $USER->id);
+    
     send_notification_validation($crsid);
     return true;
 }
