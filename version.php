@@ -10,6 +10,12 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2013011600;        // The current plugin version (Date: YYYYMMDDXX)
-$plugin->requires  = 2012061700;        // Requires this Moodle version
+$plugin->version   = 2020100300;        // The current plugin version (Date: YYYYMMDDXX)
+$plugin->requires  = 2020060900;        // Requires this Moodle version
 $plugin->component = 'local_course_validated';       // Full name of the plugin (used for diagnostics)
+
+$plugin->dependencies = [
+    'local_up1_metadata' => 2020100300,
+    'local_roftools' => 2020100300
+];
+
