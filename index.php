@@ -20,16 +20,6 @@ $show = optional_param('show', 0, PARAM_INT);
 $validate = optional_param('validate', 0, PARAM_INT);
 $perpage = optional_param('perpage', 20, PARAM_INT); // nb of rows per page
 
-// Hide or show a course
-if (!empty($hide) or !empty($show)) {
-   show_or_hide($show, $hide);
-   redirect(new moodle_url('/local/course_validated/index.php'));
-}
-
-if (!empty($validate)) {
-   validate_course($validate);
-   redirect(new moodle_url('/local/course_validated/index.php'));
-}
 
 $systemcontext   = context_system::instance();
 $PAGE->set_context($systemcontext);
@@ -39,6 +29,19 @@ $PAGE->set_heading("Espaces de cours en attente d'approbation");
 $PAGE->set_pagelayout('admin');
 
 $PAGE->requires->css(new moodle_url('/local/course_validated/css/coursevalidated.css'));
+
+// Hide or show a course
+if (!empty($hide) or !empty($show)) {
+   show_or_hide($show, $hide);
+   redirect(new moodle_url('/local/course_validated/index.php'));
+}
+
+if (!empty($validate)) {
+   validate_course($validate);
+   redirect(new moodle_url('/local/course_validated/index.php'), 'Espace de cours validé');
+}
+
+
 
 echo $OUTPUT->header();
 
