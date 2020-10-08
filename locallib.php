@@ -353,7 +353,6 @@ function show_or_hide($show, $hide) {
 /**
  * validate a course (set the custom data up1validatedate to time()
  * @param int $crsid id of course to validate
- * @return boolean
  */
 function validate_course($crsid) {
 	global $DB, $USER;
@@ -370,13 +369,11 @@ function validate_course($crsid) {
     up1_meta_set_data($crsid, 'up1approbateureffid', $USER->id);
     
     send_notification_validation($crsid);
-    return true;
 }
 
 /**
  * send an internal message when a course has been validated
  * @param int $crsid id of validated course
- * @return boolean
  */
 function send_notification_validation($crsid) {
     global $DB;
@@ -399,10 +396,12 @@ function send_notification_validation($crsid) {
             $recipients[] = $userid;
         }
     }
-    $eventdata = new stdClass();
+    
+    $eventdata = new \core\message\message();
+    $eventdata->courseid = (int)$crsid;
     $eventdata->component = 'moodle';
     $eventdata->name = 'courserequested';
-    $eventdata->userfrom = 2;
+    $eventdata->userfrom = get_admin();
     $eventdata->subject = $msg['subject'];
     $eventdata->fullmessageformat = FORMAT_PLAIN;   // text format
     $eventdata->fullmessage = $msg['body'] . "\n" . ($summary ? $summary : '');
@@ -412,7 +411,6 @@ function send_notification_validation($crsid) {
         $eventdata->userto = $recipient;
         $res = message_send($eventdata);
     }
-    return true;
 }
 
 /**
