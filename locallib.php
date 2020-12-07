@@ -26,6 +26,14 @@ require_once($CFG->dirroot . "/local/roftools/roflib.php");
 function get_id_courses_to_validate($approbateurid, $validated, $permcheck=false) {
     global $DB;
 
+    $idCurYear = '';
+    $curyear = get_config('local_cohortsyncup1', 'cohort_period');
+    $sql = "SELECT * FROM {course_categories} WHERE name LIKE 'Année $curyear-%'";
+    $result = $DB->get_fieldset_sql($sql);
+    if ($result !== null) {
+        $idCurYear = $result[0];
+    }
+
     $avaliderId = $DB->get_field('customfield_field', 'id', ['shortname' => 'up1avalider']);
     $datevalidId = $DB->get_field('customfield_field', 'id', ['shortname' => 'up1datevalid']);
     $approbateurpropidId = $DB->get_field('customfield_field', 'id', ['shortname' => 'up1approbateurpropid']);
@@ -40,7 +48,10 @@ function get_id_courses_to_validate($approbateurid, $validated, $permcheck=false
     if ($approbateurid) {
         $sql .= "JOIN {customfield_data} cdq ON (cd1.instanceid=cdq.instanceid) " ; //cdq = approbateurpropid
     }
+    $sql .= "INNER JOIN {course} c ON cd1.objectid = c.id "
+        . "INNER JOIN join {course_categories} cc ON c.category = cc.id ";
     $sql .= "WHERE cd1.fieldid=$avaliderId AND cd1.value=1 AND cd2.fieldid=$datevalidId ";
+    $sql .= "AND cc.path LIKE '%/$idCurYear%' ";
     if ($approbateurid) {
         $sql .= "AND cdq.fieldid=$approbateurpropidId AND cdq.value=$approbateurid " ;
     }
