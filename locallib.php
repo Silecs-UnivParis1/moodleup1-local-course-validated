@@ -48,8 +48,8 @@ function get_id_courses_to_validate($approbateurid, $validated, $permcheck=false
     if ($approbateurid) {
         $sql .= "JOIN {customfield_data} cdq ON (cd1.instanceid=cdq.instanceid) " ; //cdq = approbateurpropid
     }
-    $sql .= "INNER JOIN {course} c ON cd1.objectid = c.id "
-        . "INNER JOIN join {course_categories} cc ON c.category = cc.id ";
+    $sql .= "INNER JOIN {course} c ON cd1.instanceid = c.id "
+        . "INNER JOIN {course_categories} cc ON c.category = cc.id ";
     $sql .= "WHERE cd1.fieldid=$avaliderId AND cd1.value=1 AND cd2.fieldid=$datevalidId ";
     $sql .= "AND cc.path LIKE '%/$idCurYear%' ";
     if ($approbateurid) {
