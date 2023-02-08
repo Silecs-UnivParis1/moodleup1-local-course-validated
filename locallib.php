@@ -410,7 +410,7 @@ function send_notification_validation($crsid) {
     
     $eventdata = new \core\message\message();
     $eventdata->courseid = (int)$crsid;
-    $eventdata->component = 'course_validated';
+    $eventdata->component = 'local_course_validated';
     $eventdata->name = 'notificationcoursevalidate';
     $eventdata->notification = 1;
     $eventdata->userfrom = get_admin();
