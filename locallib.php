@@ -410,8 +410,9 @@ function send_notification_validation($crsid) {
     
     $eventdata = new \core\message\message();
     $eventdata->courseid = (int)$crsid;
-    $eventdata->component = 'moodle';
-    $eventdata->name = 'courserequested';
+    $eventdata->component = 'course_validated';
+    $eventdata->name = 'notificationcoursevalidate';
+    $eventdata->notification = 1;
     $eventdata->userfrom = get_admin();
     $eventdata->subject = $msg['subject'];
     $eventdata->fullmessageformat = FORMAT_PLAIN;   // text format
