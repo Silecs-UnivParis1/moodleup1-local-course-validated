@@ -455,7 +455,7 @@ function message_notification_validation ($crsid) {
     . "Vous trouverez à cette adresse " . $CFG->wwwroot . "/guide "
     . "un ensemble de ressources d'aide et de conseil sur les principales fonctionnalités disponibles."
     . "\n\n"
-    . "N'hésitez pas à contacter l'un des membres de l'équipe du service TICE :\n"
+    . "N'hésitez pas à contacter l'un des membres de l'équipe du Service des usages numériques :\n"
     . "- si vous souhaitez participer à l’une des sessions de prise en mains régulièrement organisées ;\n"
     . "- si vous rencontrez une difficulté ou si vous constatez une anomalie de fonctionnement.\n"
     . "\n\n"
@@ -466,7 +466,7 @@ function message_notification_validation ($crsid) {
     . "\n"
     . "L’assistance EPI\n"
     . "\n"
-    . "Service TICE - Pôle Ingénieries pédagogique et de formation\n"
+    . "Service des usages numériques - Pôle Ingénieries pédagogique et de formation\n"
     . "Université Paris 1 Panthéon-Sorbonne\n"
     . "Courriel : assistance-epi@univ-paris1.fr\n" ;
 
